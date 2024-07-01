@@ -1,0 +1,24 @@
+import { NextFunction, Request, Response } from "express";
+import { validateRequest } from "../utility/helpers";
+import { header } from "express-validator";
+import jwt from "../utility/jwt";
+
+export default function guard(req: any, res: Response, next: NextFunction){
+  try{
+    validateRequest(req);
+    const token = req.header('authorization');
+
+    const decoded = jwt.verify(token);
+    
+    req.user = decoded?.id;
+    // req.role = decoded?.role;
+    next();
+  }
+  catch(error){
+    next(error);
+  }
+}
+
+export const guardValid= header("authorization")
+  .notEmpty().withMessage("Token is required")
+  .customSanitizer(value => value?.replace('Bearer ', ''))
