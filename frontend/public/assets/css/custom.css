@@ -1,0 +1,29 @@
+
+.paging-item {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 35px;
+  height: 35px;
+  border-radius: 100px;
+  font-weight: 600;
+  color: white !important;
+}
+
+.paging-item:hover {
+  background-color: #ecebf1;
+}
+
+.paging-item.active {
+  background-color: #7266bb;
+  color: black !important
+}
+
+.paging {
+  gap: 6px;
+  list-style-type: none;
+  display: flex;
+  align-items: center;
+  width: 100%;
+  justify-content: end;
+}
