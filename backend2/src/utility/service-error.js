@@ -1,18 +1,17 @@
-// import { AxiosError } from 'axios';
-import { StatusCodes } from 'http-status-codes';
+const { StatusCodes } = require('http-status-codes');
   
-export class ServiceError extends Error {
-  statusCode: number
-  status: string
-  data: any
-  errorStack: any
+class ServiceError extends Error {
+  statusCode
+  status
+  data
+  errorStack
 
   constructor(
-    message: string,
-    statusCode: number,
-    data: any = null,
-    status: "failed" | "success" = "failed",
-    errorStack?: any
+    message,
+    statusCode,
+    data = null,
+    status = "failed",
+    errorStack
   ){
     super(message);
     Object.setPrototypeOf(this, new.target.prototype);
@@ -26,8 +25,8 @@ export class ServiceError extends Error {
   }
 }
 
-export class BadRequestException extends ServiceError {
-  constructor(message: string, data?: any) {
+class BadRequestException extends ServiceError {
+  constructor(message, data) {
     super(
       message, 
       StatusCodes.BAD_REQUEST, 
@@ -37,8 +36,8 @@ export class BadRequestException extends ServiceError {
   }
 }
   
-export class UnauthorizedException extends ServiceError {
-  constructor(message: string, data?: any) {
+class UnauthorizedException extends ServiceError {
+  constructor(message, data) {
     super(
       message, 
       StatusCodes.UNAUTHORIZED,
@@ -48,8 +47,8 @@ export class UnauthorizedException extends ServiceError {
   }
 }
 
-export class InternalServerErrorException extends ServiceError {
-  constructor(message: string, data?: any) {
+class InternalServerErrorException extends ServiceError {
+  constructor(message, data) {
     super(
       message, 
       StatusCodes.INTERNAL_SERVER_ERROR, 
@@ -59,8 +58,8 @@ export class InternalServerErrorException extends ServiceError {
   }
 }
 
-export class ExpectationFailedException extends ServiceError {
-  constructor(message: string, data?: any) {
+class ExpectationFailedException extends ServiceError {
+  constructor(message, data) {
     super(
       message, 
       StatusCodes.EXPECTATION_FAILED, 
@@ -70,8 +69,8 @@ export class ExpectationFailedException extends ServiceError {
   }
 }
 
-export class ServiceUnavailableException extends ServiceError {
-  constructor(message: string, data?: any) {
+class ServiceUnavailableException extends ServiceError {
+  constructor(message, data) {
     super(
       message, 
       StatusCodes.SERVICE_UNAVAILABLE, 
@@ -81,8 +80,8 @@ export class ServiceUnavailableException extends ServiceError {
   }
 }
 
-export class NotFoundException extends ServiceError {
-  constructor(message: string, data?: any) {
+class NotFoundException extends ServiceError {
+  constructor(message, data) {
     super(
       message, 
       StatusCodes.NOT_FOUND, 
@@ -92,8 +91,8 @@ export class NotFoundException extends ServiceError {
   }
 }
 
-export class TooManyRequestsException extends ServiceError {
-  constructor(message: string, data?: any) {
+class TooManyRequestsException extends ServiceError {
+  constructor(message, data) {
     super(
       message, 
       StatusCodes.TOO_MANY_REQUESTS, 
@@ -103,8 +102,8 @@ export class TooManyRequestsException extends ServiceError {
   }
 }
 
-export class ActionNotAllowed extends ServiceError {
-  constructor(message: string, data?: any) {
+class ActionNotAllowed extends ServiceError {
+  constructor(message, data) {
     super(
       message, 
       StatusCodes.FORBIDDEN, 
@@ -114,8 +113,8 @@ export class ActionNotAllowed extends ServiceError {
   }
 }
 
-export class UnprocessableContent extends ServiceError {
-  constructor(message: string, data?: any) {
+class UnprocessableContent extends ServiceError {
+  constructor(message, data) {
     super(
       message, 
       StatusCodes.UNPROCESSABLE_ENTITY, 
@@ -125,21 +124,28 @@ export class UnprocessableContent extends ServiceError {
   }
 }
 
-export class Logintimeout extends ServiceError {
-  constructor(message: string, data?: any) {
+class Logintimeout extends ServiceError {
+  constructor(message, data) {
     super(message, 440, data, "failed");
   }
 }
 
-// export class ProviderError extends Error {
-//   statusCode: number
-//   status: string
-//   data: any
-//   message: string;
-//   errorStack: any
+module.exports = {
+  Logintimeout, UnprocessableContent,
+  ActionNotAllowed, TooManyRequestsException,
+  NotFoundException, ServiceUnavailableException,
+  ServiceError, BadRequestException
+}
 
-//   constructor(service: string, errorStack?: any){
-//     super(errorStack?.response?.data?.message || errorStack?.message);
+// class ProviderError extends Error {
+//   statusCode
+//   status
+//   data
+//   message, status;
+//   errorStack
+
+//   constructor(servicestatus, errorStack?){
+//     super(errorStack?.response?.data.message || errorStack?.message);
 //     Object.setPrototypeOf(this, new.target.prototype);
 
 //     this.statusCode = 400

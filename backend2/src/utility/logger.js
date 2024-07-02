@@ -1,13 +1,13 @@
-import logfmt from 'logfmt';
+const logfmt = require('logfmt');
 
 class Logger {
   name;
 
-  constructor(service: string) {
+  constructor(service) {
     this.name = service;
   }
 
-  log(message: string, opts: object = {}) {
+  log(message, opts = {}) {
     const logData = logfmt.stringify(Object.assign(opts, { component: this.name }));
     if (message) {
       process.stdout.write(`${message} ${logData}` + '\n');
@@ -16,7 +16,7 @@ class Logger {
     }
   }
 
-  error(message: string, opts: object = {}) {
+  error(message, opts = {}) {
     const logData = logfmt.stringify(Object.assign(opts, { component: this.name }));
     if (message) {
       process.stderr.write(`${message} ${logData}` + '\n');
@@ -26,4 +26,4 @@ class Logger {
   }
 }
 
-export default Logger;
+module.exports = Logger;

@@ -1,11 +1,10 @@
-import { NextFunction, Request, Response } from "express";
-import { ServiceError } from "../utility/service-error";
-import { StatusCodes } from "http-status-codes";
-import Logger from "../utility/logger";
+const { ServiceError } = require("../utility/service-error.js");
+const { StatusCodes } = require("http-status-codes");
+const Logger = require("../utility/logger.js");
 
 const logger = new Logger("error")
 
-const ErrorHandler = async (err: ServiceError, _: Request, res: Response, next: NextFunction): Promise<any> => { 
+const ErrorHandler = async (err, _, res, next)=> { 
 
   process.on('uncaughtException', (reason) => {
     logger.log("uncaught Exception", reason)
@@ -13,7 +12,7 @@ const ErrorHandler = async (err: ServiceError, _: Request, res: Response, next: 
   })
 
   process.on('unhandledRejection', error => {
-    logger.log("uncaught Rejection", error as any)
+    logger.log("uncaught Rejection", error)
     throw error; // need to take care
   })
     
@@ -34,4 +33,4 @@ const ErrorHandler = async (err: ServiceError, _: Request, res: Response, next: 
   next();
 }
 
-export default ErrorHandler
+module.exports = ErrorHandler

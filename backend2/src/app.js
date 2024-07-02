@@ -1,9 +1,9 @@
-import express from 'express'
-import helmet from 'helmet';
-import cors from 'cors';
-import ErrorHandler from './middleware/error-handler';
-import api from './api';
-import Logger from './utility/logger';
+const express = require('express')
+const helmet = require('helmet')
+const cors = require('cors')
+const ErrorHandler = require('./middleware/error-handler.js');
+const api = require('./api/index.js');
+const Logger = require('./utility/logger.js');
 
 const logger = new Logger("server")
 
@@ -26,4 +26,4 @@ api(app)
 app.use(ErrorHandler)
 
 app.disable('x-powered-by')
-export default app
+module.exports = app
