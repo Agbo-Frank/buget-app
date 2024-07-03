@@ -20,7 +20,6 @@ class Controller {
 
       return responsHandler(res, "Registration successful", StatusCodes.CREATED, user)
     } catch (error) {
-      console.log(error)
       next(error)
     }
   }
@@ -32,6 +31,7 @@ class Controller {
 
       let user = await User.findOne({where: { email } })
       if(!user) throw new NotFoundException("User not found");
+      if(user.status === 'pending') throw new BadRequestException("User's account hasn't been activated");
 
       let is_match = await bcrypt.compare(password, user.password)
       if(!is_match) throw new BadRequestException("Incorrect password");
@@ -40,7 +40,6 @@ class Controller {
 
       return responsHandler(res, "User login successful", StatusCodes.OK, data)
     } catch (error) {
-      console.log(error)
       next(error)
     }
   }

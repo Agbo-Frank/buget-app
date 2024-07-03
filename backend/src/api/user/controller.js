@@ -7,14 +7,13 @@ const { Op } = require("sequelize");
 class Controller {
   async remove(req, res, next){
     try {
-      const User = await User.findByPk(req.params.id)
-      if(!User) throw new NotFoundException("User not found")
+      const user = await User.findByPk(req.params.id)
+      if(!user) throw new NotFoundException("User not found")
 
       await User.destroy({ where: { id: req.params.id }})
 
       return responsHandler(res, "User removed successfully", StatusCodes.OK)
     } catch (error) {
-      console.log(error)
       next(error)
     }
   }

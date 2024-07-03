@@ -12,7 +12,6 @@ class Controller {
 
       return responsHandler(res, "Entry added successfully", StatusCodes.CREATED, entry)
     } catch (error) {
-      console.log(error)
       next(error)
     }
   }
@@ -26,7 +25,6 @@ class Controller {
 
       return responsHandler(res, "Entry removed successfully", StatusCodes.OK)
     } catch (error) {
-      console.log(error)
       next(error)
     }
   }
@@ -41,7 +39,6 @@ class Controller {
 
       return responsHandler(res, "Entry updated successfully", StatusCodes.OK, entry)
     } catch (error) {
-      console.log(error)
       next(error)
     }
   }
@@ -49,13 +46,14 @@ class Controller {
   async getEntries(req, res, next){
     try {
       const filters = extractFilters(req.query)
-      filters.push({userId: req.user})
+      if(req.role !== 'admin'){
+        filters.push({userId: req.user})
+      } 
 
       const data = await Entry.findAll({ where: { [Op.and]: filters } })
 
       return responsHandler(res, "User entry retrieved successfully", StatusCodes.OK, data)
     } catch (error) {
-      console.log(error)
       next(error)
     }
   }
@@ -67,7 +65,6 @@ class Controller {
 
       return responsHandler(res, "Entry retrieved successfully", StatusCodes.OK, data)
     } catch (error) {
-      console.log(error)
       next(error)
     }
   }
@@ -76,14 +73,13 @@ class Controller {
     try {
       const entries = await Entry.findAll({
         where: {
-          date: {
-            [Op.gte]: new Date(new Date().setFullYear(new Date().getFullYear() - 1))
-          }
+          date: { [Op.gte]: new Date(new Date().setFullYear(new Date().getFullYear() - 1)) }
         }
       });
 
+      const month_index = new Date().getMonth()
       const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"]
-      const labels = months.splice(0, new Date().getMonth() + 1)
+      const labels = months.splice(0, month_index + 1)
 
       //initializing datasets 
       const datasets = labels.reduce((acc, month) => {
@@ -92,7 +88,7 @@ class Controller {
       }, {});
 
       entries.forEach(entry => {
-        const month = labels[new Date(entry.date).getMonth()];
+        const month = labels[month_index];
         if (entry.category === 'income') {
           datasets[month].income += parseFloat(entry.amount);
         } else {
@@ -115,7 +111,6 @@ class Controller {
         }
       )
     } catch (error) {
-      console.log(error)
       next(error)
     }
   }
