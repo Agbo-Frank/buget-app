@@ -1,5 +1,6 @@
 export * from "./overview"
 export * from "./login"
+export * from "./registration"
 export * from "./expenses"
 export * from "./users"
 export * from "./settings"

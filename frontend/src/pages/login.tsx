@@ -3,7 +3,7 @@ import { useFormik } from "formik"
 import { Textinput } from "../component"
 import * as yup from "yup"
 import { Button } from "../component/button"
-import { useNavigate } from "react-router-dom"
+import { Link, useNavigate } from "react-router-dom"
 import api from "../utilities/api"
 
 const initialValues = {
@@ -54,13 +54,14 @@ export function Login(){
                         <Button loading={loading} title="Log In" type="submit" style="btn-success btn-block"  />
                       </form>
 
-                      {/* <div className="row mt-4">
+                      <div className="row mt-4">
                         <div className="col-12 text-center">
                           <p className="text-muted mb-2">
-                            <a className='text-muted font-weight-medium ml-1' href='pages-recoverpw.html'>Forgot your password?</a>
+                            Don't have an account? 
+                            <Link className='text-primary font-weight-medium ml-1' to='/register'>Register</Link>
                           </p>
                         </div>
-                      </div> */}
+                      </div>
                         
                     </div>
                   </div>

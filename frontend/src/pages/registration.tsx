@@ -3,29 +3,31 @@ import { useFormik } from "formik"
 import { Textinput } from "../component"
 import * as yup from "yup"
 import { Button } from "../component/button"
-import { useNavigate } from "react-router-dom"
+import { Link, useNavigate } from "react-router-dom"
 import api from "../utilities/api"
 
 const initialValues = {
   email: "",
-  password: ""
+  password: "",
+  username: ""
 }
 
-export function Login(){
-  const { makeRequest, loading, data } = useRequest(api.login)
+export function Register(){
+  const { makeRequest, loading, data } = useRequest(api.register)
   const navigate = useNavigate()
 
   const formik = useFormik({
     initialValues,
     validationSchema: yup.object({
       email: yup.string().email("Invalid email").required("Email is required"),
-      password: yup.string().required("Password is required")
+      password: yup.string().required("Password is required"),
+      username: yup.string().required("Username is required"),
     }),
     async onSubmit(value, helpers){
       const data = await makeRequest(value)
       if(data?.status === "success") {
         helpers.resetForm()
-        navigate("/")
+        navigate("/login")
       }
     }
   })
@@ -45,22 +47,24 @@ export function Login(){
                             <i className="mdi mdi-alpha-h-circle"></i> <b>HEYQO</b>
                           </a>
                       </div>
-                      <h1 className="h5 mb-1">Welcome Back!</h1>
-                      <p className="text-muted mb-4">Enter your email address and password to access admin panel.</p>
+                      <h1 className="h5 mb-1">Create an Account!</h1>
+                      <p className="text-muted mb-4">Don't have an account? Create your own account, it takes less than a minute</p>
                       <form onSubmit={formik.handleSubmit} className="user">
+                      <Textinput name="user" style="form-control-user" placeholder="johndoe" label="Enter username" formik={formik} />
                         <Textinput type="email" name="email" style="form-control-user" placeholder="johndoe@gmail.com" label="Enter email" formik={formik} />
                         <Textinput type="password" name="password" style="form-control-user" placeholder="* * * * * *"  label="Enter password" formik={formik} />
 
-                        <Button loading={loading} title="Log In" type="submit" style="btn-success btn-block"  />
+                        <Button loading={loading} title="Register" type="submit" style="btn-success btn-block"  />
                       </form>
 
-                      {/* <div className="row mt-4">
+                      <div className="row mt-4">
                         <div className="col-12 text-center">
                           <p className="text-muted mb-2">
-                            <a className='text-muted font-weight-medium ml-1' href='pages-recoverpw.html'>Forgot your password?</a>
+                            Already have an account? 
+                            <Link className='text-primary font-weight-medium ml-1' to='/login'>Login</Link>
                           </p>
                         </div>
-                      </div> */}
+                      </div>
                         
                     </div>
                   </div>
