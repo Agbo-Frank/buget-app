@@ -3,18 +3,6 @@ import { Chart as ChartJS, LineElement, CategoryScale, LinearScale, PointElement
 
 ChartJS.register(LineElement, CategoryScale, LinearScale, PointElement);
 
-const data = {
-  labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
-  datasets: [
-    {
-      label: 'My First dataset',
-      backgroundColor: 'rgba(255, 99, 132, 0.2)',
-      borderColor: 'rgba(255, 99, 132, 1)',
-      data: [65, 59, 80, 81, 56, 55, 40],
-    },
-  ],
-};
-
 const options = {
   responsive: true,
   plugins: {
@@ -24,10 +12,35 @@ const options = {
   },
 };
 
-export const LineChart = () => (
-  <div>
-    <h2>Line Chart Example</h2>
-    <Line data={data} options={options} />
-  </div>
-);
+export const LineChart = ({ labels, income = [], expense = [] }) => {
+  const data = {
+    labels,
+    datasets: [
+      {
+        label: 'Income',
+        backgroundColor: 'rgba(42,193,78,0.2)',
+        borderColor: 'rgba(42,193,78,1)',
+        data: income,
+      },
+      {
+        label: 'Expenses',
+        backgroundColor: 'rgba(241,80,80,0.2)',
+        borderColor: 'rgba(241,80,80,1)',
+        data: expense,
+      },
+    ],
+  };
+  return(
+    <div className="col-xl-6">
+      <div className="card">
+        <div className="card-body">
+
+          <h4 className="card-title">Monthly chart</h4>
+          {/* <p className="card-subtitle mb-4">Example of line chart chart js.</p> */}
+          <Line data={data} options={options} />
+        </div> 
+      </div>
+    </div>
+  )
+};
 

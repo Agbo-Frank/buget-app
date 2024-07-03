@@ -82,14 +82,17 @@ class Controller {
         }
       });
 
-      const datasets = {};
+      const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"]
+      const labels = months.splice(0, new Date().getMonth() + 1)
+
+      //initializing datasets 
+      const datasets = labels.reduce((acc, month) => {
+        acc[month] = { income: 0, expense: 0 }
+        return acc
+      }, {});
 
       entries.forEach(entry => {
-        const month = dayjs entry.date.toISOString();
-        console.log(month)
-        if (!datasets[month]) {
-          datasets[month] = { income: 0, expense: 0 };
-        }
+        const month = labels[new Date(entry.date).getMonth()];
         if (entry.category === 'income') {
           datasets[month].income += parseFloat(entry.amount);
         } else {
@@ -97,17 +100,19 @@ class Controller {
         }
       });
 
-      console.log(datasets)
-
-      const labels = Object.keys(datasets).sort();
-      const income_datasets = labels.map(label => datasets[label].income);
-      const expense_datasets = labels.map(label => datasets[label].expense);
+      const data = Object.values(datasets)
+      const income = data.map(d => d.income);
+      const expense = data.map(d => d.expense);
 
       return responsHandler(
         res, 
         "Entry overview retrieved successfully", 
         StatusCodes.OK, 
-        { income_datasets, expense_datasets, recent_entries: entries.splice(0, 5) }
+        { 
+          income, expense, 
+          recent_entries: entries.splice(0, 5),
+          labels
+        }
       )
     } catch (error) {
       console.log(error)

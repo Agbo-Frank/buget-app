@@ -12,8 +12,8 @@ export function SiderBar(){
 
             <div className="navbar-brand-box">
                 <a className='logo' href='index.html'>
-                  <i className="mdi mdi-alpha-h-circle"></i>
-                  <span> Heyqo </span>
+                  <i className="mdi mdi-alpha-b-circle"></i>
+                  <span> Budgeti </span>
                 </a>
             </div>
             <div id="sidebar-menu">
@@ -26,15 +26,18 @@ export function SiderBar(){
                     <span>Dashboard</span>
                   </Link>
                 </li>
-                <li>
-                  <Link to="/users" className='waves-effect'>
-                    <i className="feather-airplay"></i>
-                    <span>Users</span>
-                  </Link>
-                </li>
+                {
+                  user?.roles === "admin" &&
+                  <li>
+                    <Link to="/users" className='waves-effect'>
+                      <i className="feather-users"></i>
+                      <span>Users</span>
+                    </Link>
+                  </li>
+                }
                 <Dropdown 
                   title="Entries" 
-                  icon={<i className="dripicons-user-group"></i>}
+                  icon={<i className="feather-inbox"></i>}
                   items={[
                     {title: "Incomes", value: "/incomes"},
                     {title: "Expenses", value: "/expenses"}

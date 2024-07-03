@@ -63,7 +63,7 @@ export function Users(){
                     users?.map(d => (
                       <tr>
                         <td>{ d?.username }</td>
-                        <td className="text-capitalize">{ d?.email }</td>
+                        <td>{ d?.email }</td>
                         <td>{ d?.role }</td>
                         <td className="text-capitalize">{ d?.status }</td>
                         <td>{ dayjs(d?.createdAt).format("DD MMM YYYY hh:mm A") }</td>
