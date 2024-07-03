@@ -4,5 +4,5 @@ export default {
   profile: "/auth/profile",
   entries: "/entries",
   users: "/users",
-  overview: '/overview'
+  overview: '/entries/overview'
 }

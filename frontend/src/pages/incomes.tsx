@@ -1,4 +1,4 @@
-import { DashboardLayout, Modal, Textinput } from "../component";
+import { DashboardLayout, Modal, Selectinput, Textinput } from "../component";
 import { Button } from "../component/button";
 import * as yup from "yup"
 import { useRequest } from "../hooks/use-request";
@@ -10,13 +10,13 @@ import numeral from "numeral"
 import { useStore } from "../hooks/use-store";
 
 export function Incomes(){
-  const { penalties, set, user } = useStore()
+  const { incomes, set } = useStore()
   const { makeRequest } = useRequest(api.entries)
   const [search, setSearch] = useState("")
   const [selected, setSelected] = useState()
 
   useEffect(() => {
-    if(penalties.length === 0){
+    if(incomes.length === 0){
       makeRequest({ category: "income" }, "get")
         .then(data => set("income", data.data))
         .catch(console.log)
@@ -28,8 +28,8 @@ export function Incomes(){
       right={<Button title="Add income" data-toggle="modal" data-target="#add-income" />}
     >
       <AddIncome />
-      <PenaltyRemoval item={selected} />
-      <PenaltyItem item={selected} />
+      <RemoveIncome item={selected} />
+      <ViewIncome item={selected} />
       <div className="row">
         <div className="col-12">
             <div className="card">
@@ -50,35 +50,32 @@ export function Incomes(){
               <table className="table table-striped dt-responsive nowrap">
                 <thead>
                   <tr>
-                    <th>Name</th>
-                    <th>Fee</th>
-                    <th>Created At</th>
+                    <th>Description</th>
+                    <th>Amount</th>
+                    <th>Date</th>
                     <th><i className="fas fa-ellipsis-h" ></i></th>
                   </tr>
                 </thead>
               
                 <tbody>
                   {
-                    penalties?.filter(p =>
-                      p?.name?.toLowerCase().includes(search) ||
-                      String(p?.fine)?.toLowerCase().includes(search)
-                    ).map((p, i) => (
+                    incomes?.map((p, i) => (
                       <tr key={i}>
-                        <td className="text-capitalize">{ p.name }</td>
-                        <td>₦{ numeral(p.fine).format("0,0.00") }</td>
-                        <td>{ dayjs(p.created_at).format("DD MMM YYYY HH:mm") }</td>
+                        <td className="text-capitalize">{ p.description }</td>
+                        <td>₦{ numeral(p.amount).format("0,0.00") }</td>
+                        <td>{ dayjs(p.date).format("DD MMM YYYY HH:mm") }</td>
                         <td className="">
                           <i 
                             className="feather-edit mr-2"
                             onClick={() => setSelected(p) }
                             data-toggle="modal" 
-                            data-target="#penalty-item"
+                            data-target="#income-item"
                           ></i>
                           <i 
                             className="feather-trash" 
                             data-toggle="modal" 
                             onClick={() => setSelected(p) } 
-                            data-target={`#penalty-removal`}
+                            data-target="#remove-income"
                           ></i>
                         </td>
                       </tr>
@@ -94,12 +91,20 @@ export function Incomes(){
   )
 }
 
-function PenaltyItem({ item }: any ){
-  const { makeRequest, loading } = useRequest(api.entries)
+const initialValues = { 
+  amount: "", 
+  description: "",
+  date: "",
+  category: "income"
+}
+
+function ViewIncome({ item }: any ){
+  const { makeRequest, loading } = useRequest(`${api.entries}/${item?.id}`)
+
   const formik = useFormik({
-    initialValues: { name: item?.name, fine: item?.fine},
+    initialValues,
     async onSubmit(values, heplers){
-      const data = await makeRequest({...values, id: item?._id}, "put")
+      const data = await makeRequest(values, "put")
       if(data.status === "success") {
         heplers.resetForm()
       }
@@ -111,49 +116,50 @@ function PenaltyItem({ item }: any ){
   }, [item])
   return(
     <Modal 
-      title="Add Penalties" 
-      id={`penalty-item`}
+      title="Income" 
+      id="income-item"
       footer={
         <>
           <Button title="Close" variant="outlined" data-dismiss="modal" />
-          <Button onClick={formik.handleSubmit} loading={loading} title="Update Penalties" />
+          <Button onClick={formik.handleSubmit} loading={loading} title="Update Income" />
         </>
       }
     >
       <div className="needs-validation">
-        <Textinput formik={formik} label="Enter Penalty name" name="name" />
-        <Textinput formik={formik} label="Enter fine/fee" name="fine" type="number" />
+      <Textinput formik={formik} label="Description" name="description"  />
+        <Textinput formik={formik} label="Amount" name="amount" />
+        <Selectinput id="category" formik={formik} label="Change category" name="category" data={['expense', 'income'].map(i => ({label: i, value: i}))} />
       </div>
     </Modal>
   )
 }
 
-function PenaltyRemoval({ item }: any ){
-  const { penalties, set } = useStore()
-  const { makeRequest, loading } = useRequest(`${api.entries}/${item?._id}`)
+function RemoveIncome({ item }: any ){
+  const { incomes, set } = useStore()
+  const { makeRequest, loading } = useRequest(`${api.entries}/${item?.id}`)
 
-  async function handlePenaltyRemoval(){
+  async function handleRemoveExpense(){
     const result = await makeRequest({}, "delete")
     if(result?.status === "success"){
-      set("penalties", penalties.filter(i => i._id !== item?._id))
+      set("incomes", incomes.filter(i => i.id !== item?.id))
     }
   }
   return(
     <Modal 
-      title="Delete Penalty" 
-      id={`penalty-removal`}
+      title="Remove Income" 
+      id="remove-income"
       footer={
         <>
           <Button title="Cancel" variant="outlined" data-dismiss="modal" />
           <Button 
             loading={loading} 
-            onClick={handlePenaltyRemoval} 
+            onClick={handleRemoveExpense} 
             title="Confirm" 
           />
         </>
       }
     >
-      <span>Are you sure you want to delete this Penalty?</span>
+      <span>Are you sure you want to delete this Income?</span>
     </Modal>
   )
 }
@@ -161,34 +167,37 @@ function PenaltyRemoval({ item }: any ){
 function AddIncome(){
   const { set } = useStore()
   const { makeRequest, loading } = useRequest(api.entries)
+
   const formik = useFormik({
-    initialValues: {name: "", fine: 0},
+    initialValues,
     validationSchema: yup.object({
-      name: yup.string().required("Penalty name is required"),
-      fine: yup.number().required("Fine/fee is required")
+      description: yup.string().required("description is required"),
+      amount: yup.number().required("Amount is required"),
+      date: yup.date().required("Date is required"),
     }),
     async onSubmit(values, heplers){
       const data = await makeRequest(values)
       if(data.status === "success") {
         heplers.resetForm()
-        set("penalties", data.data)
+        set("incomes", data.data)
       }
     }
   })
   return(
     <Modal 
-      title="Add Penalties" 
+      title="Add Income" 
       id="add-income"
       footer={
         <>
           <Button title="Close" variant="outlined" data-dismiss="modal" />
-          <Button loading={loading} onClick={formik.handleSubmit} title="Add Penalties" />
+          <Button loading={loading} onClick={formik.handleSubmit} title="Add Income" />
         </>
       }
     >
       <form className="needs-validation">
-        <Textinput formik={formik} label="Enter Penalty name" name="name" />
-        <Textinput formik={formik} label="Enter fine/fee" name="fine" type="number" />
+        <Textinput formik={formik} label="Enter Description" name="description" />
+        <Textinput formik={formik} label="Enter Amount" name="amount" />
+        <Textinput formik={formik} label="Enter date" name="date" type="date" />
       </form>
     </Modal>
   )

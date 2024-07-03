@@ -122,7 +122,7 @@ function ViewExpense({ item }: any ){
   }, [item])
   return(
     <Modal 
-      title={`Expense: `}
+      title="Expense"
       id="expense-item"
       footer={
         <>
@@ -196,7 +196,7 @@ function AddExpense(){
       footer={
         <>
           <Button title="Close" variant="outlined" data-dismiss="modal" />
-          <Button loading={loading} onClick={formik.handleSubmit} title="Add Penalties" />
+          <Button loading={loading} onClick={formik.handleSubmit} title="Add Expenses" />
         </>
       }
     >

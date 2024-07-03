@@ -71,6 +71,49 @@ class Controller {
       next(error)
     }
   }
+
+  async overview(_, res, next){
+    try {
+      const entries = await Entry.findAll({
+        where: {
+          date: {
+            [Op.gte]: new Date(new Date().setFullYear(new Date().getFullYear() - 1))
+          }
+        }
+      });
+
+      const datasets = {};
+
+      entries.forEach(entry => {
+        const month = dayjs entry.date.toISOString();
+        console.log(month)
+        if (!datasets[month]) {
+          datasets[month] = { income: 0, expense: 0 };
+        }
+        if (entry.category === 'income') {
+          datasets[month].income += parseFloat(entry.amount);
+        } else {
+          datasets[month].expense += parseFloat(entry.amount);
+        }
+      });
+
+      console.log(datasets)
+
+      const labels = Object.keys(datasets).sort();
+      const income_datasets = labels.map(label => datasets[label].income);
+      const expense_datasets = labels.map(label => datasets[label].expense);
+
+      return responsHandler(
+        res, 
+        "Entry overview retrieved successfully", 
+        StatusCodes.OK, 
+        { income_datasets, expense_datasets, recent_entries: entries.splice(0, 5) }
+      )
+    } catch (error) {
+      console.log(error)
+      next(error)
+    }
+  }
 }
 
 function extractFilters(payload){
