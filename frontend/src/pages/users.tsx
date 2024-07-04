@@ -4,10 +4,8 @@ import { Button } from "../component/button";
 import api from "../utilities/api";
 import { useRequest } from "../hooks/use-request";
 import { useCallback, useEffect, useState } from "react";
-import { useStore } from "../hooks/use-store";
 import dayjs from "dayjs";
-import { Paginate } from "../component/Paginate";
-import classNames from "classnames";
+import { Pagination } from "@mui/material";
 
 export function Users(){
   const [page, setPage] = useState(1)
@@ -83,7 +81,9 @@ export function Users(){
                   }
                 </tbody>
               </table>
-              <Paginate page={page} onChange={setPage} totalPage={data?.data?.totalPage} />
+              <div className="d-flex justify-content-end">
+                <Pagination page={page} onChange={(e, page) => setPage(page)} count={data?.data?.totalPage || -1} />
+              </div>
             </div> 
           </div> 
         </div>

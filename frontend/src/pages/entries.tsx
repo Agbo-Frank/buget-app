@@ -1,4 +1,4 @@
-import { DashboardLayout, Modal, Paginate, Selectinput, Textinput } from "../component";
+import { DashboardLayout, Modal, Selectinput, Textinput } from "../component";
 import { Button } from "../component/button";
 import * as yup from "yup"
 import { useRequest } from "../hooks/use-request";
@@ -7,8 +7,8 @@ import api from "../utilities/api";
 import { useCallback, useEffect, useState } from "react";
 import dayjs from "dayjs"
 import numeral from "numeral"
-import { useStore } from "../hooks/use-store";
 import { useParams } from "react-router-dom";
+import { Pagination } from "@mui/material";
 
 const config = {
   'expense': {title: "Expenses", slug: "expense"},
@@ -97,7 +97,9 @@ export function Entries(){
                   }
                 </tbody>
               </table>
-              <Paginate page={page} onChange={setPage} totalPage={data?.data?.totalPage} />
+              <div className="d-flex justify-content-end">
+              <Pagination page={page} onChange={(e, page) => setPage(page)} count={data?.data?.totalPage || -1} />
+              </div>
             </div> 
           </div> 
         </div>

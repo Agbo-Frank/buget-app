@@ -18,7 +18,7 @@ export function StoreProvider({ children }: PropsWithChildren){
   function set(key: string, value: any){
     setState(s => ({
       ...s, 
-      [key]: Array.isArray(value) ? value : Array.isArray(s[key]) ? [...s[key], value] : {...s[key], ...value}
+      [key]: {...s[key], ...value}
     }))
   }
 

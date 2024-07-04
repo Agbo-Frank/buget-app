@@ -13,7 +13,7 @@ export function Overview(){
   }, [])
   return(
    <DashboardLayout title="Dashboard">
-      <div className="row">
+      {/* <div className="row">
         <OverviewCard 
           label="Total Entries" 
           value={ data?.data?.total_entries || 0 } 
@@ -34,7 +34,7 @@ export function Overview(){
           value="1,156,000" 
           color="bg-info border-info"
         />
-      </div>
+      </div> */}
       <div className="d-flex flex-row row align-items-stretch">
         <LineChart {...data?.data} />
         <div className="col-xl-6">
