@@ -42,7 +42,7 @@ export function Login(){
                     <div className="p-5">
                       <div className="text-center mb-5">
                           <a className='text-dark font-size-22 font-family-secondary' href='index.html'>
-                            <i className="mdi mdi-alpha-h-circle"></i> <b>HEYQO</b>
+                            <i className="mdi mdi-alpha-b-circle"></i> <b>Budgeti</b>
                           </a>
                       </div>
                       <h1 className="h5 mb-1">Welcome Back!</h1>
