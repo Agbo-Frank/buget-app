@@ -3,17 +3,15 @@ import { DashboardLayout, Modal, Selectinput, Textinput } from "../component";
 import { Button } from "../component/button";
 import api from "../utilities/api";
 import { useRequest } from "../hooks/use-request";
-import * as yup from "yup"
 import { useCallback, useEffect, useState } from "react";
 import { useStore } from "../hooks/use-store";
-import numeral from "numeral";
 import dayjs from "dayjs";
-import ReactPaginate from "react-paginate";
+import { Paginate } from "../component/Paginate";
 
 export function Users(){
-  const { users, set } = useStore()
+  const [page, setPage] = useState(1)
   const [selected, setSelected] = useState()
-  const { makeRequest, data, loading } = useRequest(api.users)
+  const { makeRequest, data, setData, loading } = useRequest(api.users)
   
   const onSearch = useCallback((search) => {
     let timer
@@ -23,13 +21,11 @@ export function Users(){
 
   useEffect(() => {
     makeRequest({}, "get")
-      .then(data => set("users", data.data))
-      .catch(console.log)
   }, [])
   return(
     <DashboardLayout title="Users">
-      <RemoveUser item={selected} />
-      <User item={selected} />
+      <RemoveUser setData={setData} item={selected} />
+      <User setData={setData} item={selected} />
       <div className="row">
         <div className="col-12">
           <div className="card">
@@ -60,7 +56,7 @@ export function Users(){
                 </thead>
                 <tbody>
                   {
-                    users?.map(d => (
+                    data?.data?.data?.map(d => (
                       <tr>
                         <td>{ d?.username }</td>
                         <td>{ d?.email }</td>
@@ -86,22 +82,7 @@ export function Users(){
                   }
                 </tbody>
               </table>
-              {/* <ReactPaginate
-                breakLabel="..."
-                nextLabel=">"
-                onPageChange={page => setPage(page.selected)}
-                pageRangeDisplayed={5}
-                pageCount={data?.data?.totalPages || 1}
-                className="paging"
-                activeClassName="paging-item active"
-                pageClassName="paging-item"
-                previousClassName="feather-chevron-left"
-                nextClassName="feather-chevron-right"
-                previousLabel=""
-                //@ts-ignore
-                nextLabel=""
-                renderOnZeroPageCount={null}
-              /> */}
+              <Paginate page={page} onChange={setPage} totalPage={data?.data?.totalPage} />
             </div> 
           </div> 
         </div>
@@ -110,15 +91,24 @@ export function Users(){
   )
 }
 
-function RemoveUser({ item }: any ){
+function RemoveUser({ item, setData }: any ){
   const { makeRequest, loading } = useRequest(`${api.users}/${item?.id}`)
 
   async function handlePenaltyRemoval(){
-    await makeRequest({}, "delete")
+    const result = await makeRequest({}, "delete")
+    if(result?.status === "success"){
+      setData(state => ({
+        ...state,
+        data:{
+          ...state.data,
+          data: state.data.data.filter(i => i.id !== item?.id)
+        }
+      }))
+    }
   }
   return(
     <Modal 
-      title="Delete Entry" 
+      title="Delete User" 
       id={`entry-removal`}
       footer={
         <>
@@ -136,14 +126,22 @@ function RemoveUser({ item }: any ){
   )
 }
 
-function User({ item }: any ){
+function User({ item, setData }: any ){
   const { makeRequest, loading } = useRequest(`${api.users}/${item?.id}`)
 
   const formik = useFormik({
     initialValues: item,
     async onSubmit(values, heplers){
       const data = await makeRequest(values, "put")
-      console.log(data)
+      if(data.status === "success") {
+        setData(state => ({
+          ...state,
+          data:{
+            ...state.data,
+            data: state.data.data.map(i => i.id === item.id ? data.data : i)
+          }
+        }))
+      }
     }
   })
 

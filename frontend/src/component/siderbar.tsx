@@ -1,10 +1,10 @@
 import classnames from "classnames";
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useStore } from "../hooks/use-store";
 
 export function SiderBar(){
-  const { user } = useStore()
+  const { profile } = useStore()
   return(
     <div className="vertical-menu">
 
@@ -27,7 +27,7 @@ export function SiderBar(){
                   </Link>
                 </li>
                 {
-                  user?.roles === "admin" &&
+                  profile?.role === "admin" &&
                   <li>
                     <Link to="/users" className='waves-effect'>
                       <i className="feather-users"></i>
@@ -37,10 +37,11 @@ export function SiderBar(){
                 }
                 <Dropdown 
                   title="Entries" 
+                  link="/entries/all"
                   icon={<i className="feather-inbox"></i>}
                   items={[
-                    {title: "Incomes", value: "/incomes"},
-                    {title: "Expenses", value: "/expenses"}
+                    {title: "Incomes", value: "/entries/income"},
+                    {title: "Expenses", value: "/entries/expense"}
                   ]} 
                 />
               </ul>
@@ -53,16 +54,24 @@ export function SiderBar(){
 interface IDropdown {
   title: string
   icon: JSX.Element
+  link?: string
   items: {title: string, value: string}[]
 }
 
-function Dropdown({ title, icon, items }: IDropdown){
+function Dropdown({ title, icon, link, items }: IDropdown){
   const [toggle, setToggle] = useState(false)
+  const navigate = useNavigate()
   return(
-    <li className={classnames("", {"mm-active": toggle})}>
-      <a onClick={() => setToggle(p => !p)} className="has-arrow waves-effect">
-        {icon}
-        <span>{ title }</span>
+    <li className={classnames({"mm-active": toggle})}>
+      <a className="d-flex waves-effect justify-content-between align-items-center">
+        <span>
+          <span> { icon } </span>
+          <span onClick={() => navigate(link)}>{ title }</span>
+        </span>
+        <i 
+          onClick={() => setToggle(p => !p)} 
+          className={toggle ?"dripicons-chevron-up": "dripicons-chevron-down"}
+          ></i>
       </a>
       {
         toggle &&

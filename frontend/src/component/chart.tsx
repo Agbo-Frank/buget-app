@@ -3,15 +3,6 @@ import { Chart as ChartJS, LineElement, CategoryScale, LinearScale, PointElement
 
 ChartJS.register(LineElement, CategoryScale, LinearScale, PointElement);
 
-const options = {
-  responsive: true,
-  plugins: {
-    // legend: {
-    //   position: 'top',
-    // },
-  },
-};
-
 export const LineChart = ({ labels, income = [], expense = [] }) => {
   const data = {
     labels,
@@ -37,7 +28,11 @@ export const LineChart = ({ labels, income = [], expense = [] }) => {
 
           <h4 className="card-title">Monthly chart</h4>
           {/* <p className="card-subtitle mb-4">Example of line chart chart js.</p> */}
-          <Line data={data} options={options} />
+
+          <Line 
+            data={data} 
+            options={{responsive: true, plugins: { legend: { position: "center" } }}} 
+          />
         </div> 
       </div>
     </div>

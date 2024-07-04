@@ -1,4 +1,4 @@
-const { validateRequest, responsHandler } = require("../../utility/helpers.js");
+const { validateRequest, responsHandler, pagingParams } = require("../../utility/helpers.js");
 const { Entry } = require("../../models/index.js");
 const { StatusCodes } = require("http-status-codes");
 const { NotFoundException } = require("../../utility/service-error.js");
@@ -45,12 +45,18 @@ class Controller {
 
   async getEntries(req, res, next){
     try {
+      const { offset, page, limit } = pagingParams(req)
       const filters = extractFilters(req.query)
       if(req.role !== 'admin'){
         filters.push({userId: req.user})
       } 
 
-      const data = await Entry.findAll({ where: { [Op.and]: filters } })
+      const { count, rows } = await Entry.findAndCountAll({ where: { [Op.and]: filters }, offset, limit })
+      const data = {
+        total: count,
+        page, data: rows,
+        totalPage: Math.ceil(count / limit)
+      }
 
       return responsHandler(res, "User entry retrieved successfully", StatusCodes.OK, data)
     } catch (error) {
@@ -71,6 +77,7 @@ class Controller {
 
   async overview(_, res, next){
     try {
+      // const 
       const entries = await Entry.findAll({
         where: {
           date: { [Op.gte]: new Date(new Date().setFullYear(new Date().getFullYear() - 1)) }
@@ -88,7 +95,10 @@ class Controller {
       }, {});
 
       entries.forEach(entry => {
+        const month_index = new Date(entry.date).getMonth()
         const month = labels[month_index];
+
+        if(!month) return;
         if (entry.category === 'income') {
           datasets[month].income += parseFloat(entry.amount);
         } else {
@@ -106,7 +116,7 @@ class Controller {
         StatusCodes.OK, 
         { 
           income, expense, 
-          recent_entries: entries.splice(0, 5),
+          recent_entries: entries.splice(0, 4),
           labels
         }
       )

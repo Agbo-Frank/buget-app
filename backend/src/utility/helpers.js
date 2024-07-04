@@ -93,10 +93,18 @@ module.exports.responsHandler = (res, message, status = 200, data = null) => {
   })
 }
 
+/**
+ * this returns that paging paramaters and defaul paging paramater
+ * if not provided
+ * @param {*} req 
+ * @returns 
+ */
 module.exports.pagingParams = (req) => {
-  const limit = req.query?.limit ? parseInt(`${req.query?.limit}`) : 25
-  const paginate = req?.query?.paginate ? Boolean(req?.query?.paginate) : true
-  const page = req.query?.page ? parseInt(`${req.query?.page}`) < 1 ? 1 : parseInt(`${req.query?.page}`) : 1
+  const limit = Number(req.query?.limit) || 25
+  let page = Number(req.query?.page) || 0
 
-  return {limit, page, paginate, ...req.query}
+  page = page < 1 ? 1 : page
+  const offset = (page - 1) * limit;
+
+  return { limit, page, offset, ...req.query}
 }

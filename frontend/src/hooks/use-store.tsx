@@ -6,9 +6,7 @@ const STORAGE_KEY = {
 
 const initial = {
   profile: {},
-  users: [],
-  incomes: [],
-  expenses: [],
+  users: {},
   token: localStorage.getItem(STORAGE_KEY.token) || null
 }
 

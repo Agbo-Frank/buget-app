@@ -134,46 +134,5 @@ module.exports = {
   Logintimeout, UnprocessableContent,
   ActionNotAllowed, TooManyRequestsException,
   NotFoundException, ServiceUnavailableException,
-  ServiceError, BadRequestException
+  ServiceError, BadRequestException, UnauthorizedException
 }
-
-// class ProviderError extends Error {
-//   statusCode
-//   status
-//   data
-//   message, status;
-//   errorStack
-
-//   constructor(servicestatus, errorStack?){
-//     super(errorStack?.response?.data.message || errorStack?.message);
-//     Object.setPrototypeOf(this, new.target.prototype);
-
-//     this.statusCode = 400
-
-//     if (errorStack instanceof AxiosError) {
-//       const error_res = errorStack.response;
-
-//       this.statusCode = error_res.status
-
-//       if(error_res?.status === 401){
-//         this.statusCode = 500
-//         this.message = "Internal server error"
-
-//         // trigger.sendEvent({
-//         //   name: "send.email",
-//         //   payload: {
-//         //     to: ["agbofrank531@gmail.com"],
-//         //     subject: `Puplar Error Log (${service} - service)`,
-//         //     text: `From ${service}: ${errorStack}`
-//         //   }
-//         // })
-//       }
-//     }
-    
-//     this.status = "failed";
-//     this.data = null
-//     this.errorStack = errorStack
-
-//     Error.captureStackTrace(this);
-//   }
-// }

@@ -6,6 +6,10 @@
   "scripts": {
     "dev": "nodemon src/index.js",
     "lint": "eslint .",
+    "migrate": "sequelize-cli db:migrate",
+    "undo:migrate": "sequelize-cli db:migrate:undo",
+    "seed": "sequelize-cli db:seed:all",
+    "undo:seed": "sequelize-cli db:seed:undo:all",
     "lint:fix": "eslint --fix ."
   },
   "keywords": [],
@@ -13,6 +17,7 @@
   "license": "ISC",
   "devDependencies": {
     "@eslint/js": "^9.6.0",
+    "@faker-js/faker": "^8.4.1",
     "eslint": "^9.6.0",
     "eslint-config-prettier": "^9.1.0",
     "eslint-plugin-prettier": "^5.1.3",

@@ -1,8 +1,8 @@
-const { responsHandler } = require("../../utility/helpers.js");
-const { User } = require("../../models/index.js");
+const { responsHandler, pagingParams } = require("../../utility/helpers.js");
 const { StatusCodes } = require("http-status-codes");
 const { NotFoundException } = require("../../utility/service-error.js");
 const { Op } = require("sequelize");
+const { User } = require("../../models/index.js");
 
 class Controller {
   async remove(req, res, next){
@@ -33,12 +33,21 @@ class Controller {
 
   async getUsers(req, res, next){
     try {
+      const { offset, page, limit } = pagingParams(req)
       const filters = extractFilters(req.query)
       
-      const data = await User.findAll({ 
+      const { count, rows } = await User.findAndCountAll({ 
         where: { [Op.and]: filters },
+        offset, limit,
         attributes: {exclude: ['password']}
       })
+
+      const data = {
+        total: count,
+        page, 
+        totalPage: Math.ceil(count / limit),
+        data: rows
+      }
 
       return responsHandler(res, "Users retrieved successfully", StatusCodes.OK, data)
     } catch (error) {
