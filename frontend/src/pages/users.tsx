@@ -7,6 +7,7 @@ import { useCallback, useEffect, useState } from "react";
 import { useStore } from "../hooks/use-store";
 import dayjs from "dayjs";
 import { Paginate } from "../component/Paginate";
+import classNames from "classnames";
 
 export function Users(){
   const [page, setPage] = useState(1)
@@ -60,8 +61,8 @@ export function Users(){
                       <tr>
                         <td>{ d?.username }</td>
                         <td>{ d?.email }</td>
-                        <td>{ d?.role }</td>
-                        <td className="text-capitalize">{ d?.status }</td>
+                        <td className="text-capitalize">{ d?.role }</td>
+                        <td><span className={`badge text-capitalize text-light ${d?.status === 'active' ? 'bg-success' : 'bg-warning' }`}>{ d?.status }</span></td>
                         <td>{ dayjs(d?.createdAt).format("DD MMM YYYY hh:mm A") }</td>
                         <td className="">
                           <i 
