@@ -22,17 +22,17 @@ This folder contains all the backend code and APIs for the project.
    ```sh
    cd backend
    ```
-2. Start the server:
-   ```sh
-   npm start
-   ```
-3. Run database migrations:
+2. Run database migrations:
    ```sh
    npm run migrate
    ```
-4. Seed the database with initial data:
+3. Seed the database with initial data:
    ```sh
    npm run seed
+   ```
+4. Start the server:
+   ```sh
+   npm start
    ```
 ### Seed Data
 The seed data includes:
