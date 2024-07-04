@@ -21,7 +21,7 @@ class Controller {
       const entry = await Entry.findByPk(req.params.id)
       if(!entry) throw new NotFoundException("Entry not found")
 
-      await Entry.destroy({ where: { id: req.params.id, userId: req.user }})
+      await Entry.destroy({ where: { id: req.params.id }})
 
       return responsHandler(res, "Entry removed successfully", StatusCodes.OK)
     } catch (error) {
@@ -75,14 +75,13 @@ class Controller {
     }
   }
 
-  async overview(_, res, next){
+  async overview(req, res, next){
     try {
-      // const 
-      const entries = await Entry.findAll({
-        where: {
-          date: { [Op.gte]: new Date(new Date().setFullYear(new Date().getFullYear() - 1)) }
-        }
-      });
+      const filters = [{ date: { [Op.gte]: new Date(new Date().setFullYear(new Date().getFullYear() - 1)) }}]
+      if(req.role === "admin"){
+        filters.push({userId: req.user})
+      }
+      const entries = await Entry.findAll({ where: { [Op.and]: filters } });
 
       const month_index = new Date().getMonth()
       const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"]
