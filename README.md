@@ -55,4 +55,4 @@ This folder contains the user interface code for the project.
    npm start
    ```
 ### Deployment
-You can access the deployed project [here](https://buget-app.vercel.app/).
+You can access the deployed project [here](https://buget-app.vercel.app/login).
