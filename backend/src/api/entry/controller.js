@@ -77,7 +77,7 @@ class Controller {
 
   async overview(req, res, next){
     try { 
-      const filters = [] //{ date: { [Op.gte]: new Date(new Date().setFullYear(new Date().getFullYear() - 1)) }}
+      const filters = [{ date: { [Op.gte]: new Date(new Date().setFullYear(new Date().getFullYear() - 1)) }}];
       if(req.role !== "admin"){
         filters.push({userId: req.user})
       }

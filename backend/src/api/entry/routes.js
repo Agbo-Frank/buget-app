@@ -8,7 +8,7 @@ const router = Router()
 
 router.post("/entries", valid.guard, guard, valid.createEntry, cltr.create)
 router.put("/entries/:id", valid.guard, guard, cltr.update)
-router.get("/entries/overview", cltr.overview)
+router.get("/entries/overview", valid.guard, guard, authorize(["admin", "user"]), cltr.overview)
 router.get("/entries", valid.guard, guard, authorize(["admin", "user"]), cltr.getEntries)
 router.get("/entries/:id", valid.guard, guard, cltr.getEntry)
 router.delete("/entries/:id", valid.guard, guard, cltr.remove)

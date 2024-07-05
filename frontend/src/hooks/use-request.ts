@@ -24,7 +24,7 @@ export function useRequest(url: string) {
       setLoading(true)
 
       const { data } = await axios({
-        baseURL: "https://buget-app-ah9m.onrender.com", url,
+        baseURL: "http://localhost:5000", url, //https://buget-app-ah9m.onrender.com
         method,
         data: method !== "get" ? payload : null,
         params: method === "get" ? payload : null,

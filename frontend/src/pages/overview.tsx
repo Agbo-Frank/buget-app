@@ -6,35 +6,27 @@ import classNames from "classnames";
 import numeral from "numeral";
 
 export function Overview(){
-  const { makeRequest, data } = useRequest(api.overview)
+  const { makeRequest, data, loading } = useRequest(api.overview)
 
   useEffect(() => {
     makeRequest({}, "get")
   }, [])
   return(
    <DashboardLayout title="Dashboard">
-      {/* <div className="row">
-        <OverviewCard 
-          label="Total Entries" 
-          value={ data?.data?.total_entries || 0 } 
-          color="bg-primary border-primary"
-        />
-        <OverviewCard 
-          label="Pending Entries" 
-          value={ data?.data?.pending_entries || 0 } 
-          color="bg-success border-success"
-        />
-        <OverviewCard 
-          label="Cleared Entries" 
-          value={data?.data?.cleared_entries || 0} 
-          color="bg-warning border-warning"
-        />
-        <OverviewCard 
-          label="Daily visit" 
-          value="1,156,000" 
-          color="bg-info border-info"
-        />
-      </div> */}
+    {
+      loading ?
+      <div className="d-flex flex-row row px-3 align-items-stretch">
+        {
+          [1,2].map(i => (
+            <div key={i} className="col-xl-6">
+              <div className="card">
+                <div className="card-body bg-light" style={{ height: 300}}></div>
+              </div>
+            </div>
+          ))
+        }
+      </div>:
+
       <div className="d-flex flex-row row align-items-stretch">
         <LineChart {...data?.data} />
         <div className="col-xl-6">
@@ -67,6 +59,7 @@ export function Overview(){
           </div>
         </div>
       </div>
+    }
    </DashboardLayout>
   )
 }
