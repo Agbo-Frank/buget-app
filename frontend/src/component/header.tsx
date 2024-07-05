@@ -51,12 +51,12 @@ export function Header(){
               <i className="mdi mdi-chevron-down d-none d-sm-inline-block"></i>
             </button>
             <div className="dropdown-menu dropdown-menu-right">
-              <Link 
+              {/* <Link 
                 className="dropdown-item d-flex align-items-center justify-content-between"
                 to="/settings"
               >
                 Settings
-              </Link>
+              </Link> */}
               <a 
                 className="dropdown-item d-flex align-items-center justify-content-between"
                 onClick={logout}
