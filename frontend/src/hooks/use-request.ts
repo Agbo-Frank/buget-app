@@ -24,7 +24,7 @@ export function useRequest(url: string) {
       setLoading(true)
 
       const { data } = await axios({
-        baseURL: "http://45.79.202.217:5910", url,
+        baseURL: "https://buget.nmienugu.com", url,
         method,
         data: method !== "get" ? payload : null,
         params: method === "get" ? payload : null,
